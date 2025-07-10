@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GoalList } from './goal-list/goal-list';
+import { MainContainer } from './main-container/./main-container';
 
 const routes: Routes = [
-  { path: '', component: GoalList },
+  { path: '', component: MainContainer },
 ];
 
 @NgModule({

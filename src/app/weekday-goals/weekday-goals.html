@@ -2,76 +2,16 @@
   @for (day of weekdays; track day) {
     <div class="day-box-full">
       <div class="day-label">{{ day }}</div>
-      <div class="goals-placeholder">
-        Placeholder for goals for {{ day }}
-
-
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-        Placeholder for goals for {{ day }}
-
+      <div class="day-content">
+        @for (category of goalCategories; track category) {
+          <div class="goal-section">
+            <label class="goal-label">
+              <input type="checkbox" />
+              <span class="goal-title">{{ category }}</span>
+            </label>
+            <input type="text" class="goal-input" />
+          </div>
+        }
       </div>
     </div>
   }

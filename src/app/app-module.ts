@@ -6,6 +6,7 @@ import { App } from './app';
 import { MainContainer } from './main-container/main-container';
 import { Sidebar } from './layout/sidebar/sidebar';
 import { WeekdayGoals } from './weekday-goals/weekday-goals';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -14,10 +15,11 @@ import { WeekdayGoals } from './weekday-goals/weekday-goals';
     Sidebar,
     WeekdayGoals
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule
+    ],
   providers: [
     provideBrowserGlobalErrorListeners()
   ],

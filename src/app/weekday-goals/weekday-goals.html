@@ -9,7 +9,16 @@
               <input type="checkbox" />
               <span class="goal-title">{{ category }}</span>
             </label>
-            <input type="text" class="goal-input" />
+<!--            <input type="text" class="goal-input" />-->
+            <textarea
+              class="goal-input-textarea"
+              rows="1"
+              [(ngModel)]="goals[day][category].note"
+              #noteInput
+              (input)="autoGrow(noteInput)"
+            ></textarea>
+
+
           </div>
         }
       </div>

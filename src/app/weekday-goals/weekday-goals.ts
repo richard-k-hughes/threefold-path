@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-weekday-goals',
@@ -6,15 +6,12 @@ import { Component } from '@angular/core';
   templateUrl: './weekday-goals.html',
   styleUrl: './weekday-goals.scss'
 })
-export class WeekdayGoals {
+export class WeekdayGoals implements AfterViewInit {
   weekdays: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
   goalCategories = ['Physical', 'Learning/Building', 'Music/Art'];
-
   goals: Record<string, Record<string, { checked: boolean; note: string }>> = {};
 
-  constructor() {
-    // Initialize goals structure
+  constructor(private elRef: ElementRef) {
     for (const day of this.weekdays) {
       this.goals[day] = {};
       for (const category of this.goalCategories) {
@@ -22,4 +19,25 @@ export class WeekdayGoals {
       }
     }
   }
+
+  autoGrow(el: HTMLTextAreaElement): void {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  ngAfterViewInit() {
+    const textareas = this.elRef.nativeElement.querySelectorAll('.goal-input');
+    textareas.forEach((textarea: HTMLTextAreaElement) => {
+      const autoResize = () => {
+        textarea.style.height = 'auto'; // reset
+        textarea.style.height = `${textarea.scrollHeight}px`; // grow
+      };
+
+      // resize now + on input
+      autoResize();
+      textarea.addEventListener('input', autoResize);
+    });
+  }
+
+
 }

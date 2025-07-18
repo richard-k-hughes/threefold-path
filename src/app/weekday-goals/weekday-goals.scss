@@ -48,9 +48,16 @@
 }
 
 .day-content {
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
+  //overflow-y: auto;
+  //flex: 1;
+  //min-height: 0;
+  //overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: auto;
+  overflow: visible;
 }
 
 .goal-section {
@@ -82,4 +89,23 @@
 
 .goal-input:focus {
   border-bottom: 2px solid #555;
+}
+
+.goal-input-textarea {
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.4;
+  padding: 0.4em 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  outline: none;
+  box-sizing: border-box;
+  min-height: 1.4em;
+
+  &:focus {
+    border-bottom: 2px solid #000;
+  }
 }

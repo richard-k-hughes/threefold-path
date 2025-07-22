@@ -18,6 +18,8 @@
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
   max-height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 15px; /* Add padding to prevent text from being hidden by scrollbar */
 }
 
 
@@ -68,10 +70,17 @@
   align-items: center;
   font-weight: bold;
   margin-bottom: 4px;
+  width: 100%;
 
   input[type='checkbox'] {
     margin-right: 8px;
   }
+}
+
+.goal-title {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .goal-input {
@@ -125,18 +134,23 @@
 
 .subgoal-item {
   margin-bottom: 0.5rem;
-  white-space: nowrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .subgoal-label {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.5em;
   font-size: 0.95rem;
+  width: 100%;
 }
 
 .subgoal-title {
   font-style: italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .goal-label input:checked + .goal-title,

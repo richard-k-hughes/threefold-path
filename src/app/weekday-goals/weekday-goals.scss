@@ -112,7 +112,7 @@
 
 .subgoal-wrapper {
   margin-top: 1rem;
-  padding-left: 1rem;
+  padding-left: 1.5rem;
   border-left: 2px dashed #ccc;
 }
 
@@ -136,4 +136,14 @@
   align-items: center;
   gap: 0.5em;
   font-size: 0.95rem;
+}
+
+.subgoal-title {
+  font-style: italic;
+}
+
+.goal-label input:checked + .goal-title,
+.subgoal-label input:checked + .subgoal-title {
+  text-decoration: line-through;
+  color: #aaa;
 }

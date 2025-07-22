@@ -109,3 +109,31 @@
     border-bottom: 2px solid #000;
   }
 }
+
+.subgoal-wrapper {
+  margin-top: 1rem;
+  padding-left: 1rem;
+  border-left: 2px dashed #ccc;
+}
+
+.subgoal-header {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.subgoal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.subgoal-item {
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+}
+
+.subgoal-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.95rem;
+}

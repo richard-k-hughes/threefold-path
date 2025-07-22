@@ -9,6 +9,8 @@ import { AfterViewInit, Component, ElementRef } from '@angular/core';
 export class WeekdayGoals implements AfterViewInit {
   weekdays: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   goalCategories = ['Physical', 'Learning/Building', 'Music/Art'];
+  subgoalCategories = ['Meditation', 'Diet Adherence'];
+
   goals: Record<string, Record<string, { checked: boolean; note: string }>> = {};
 
   constructor(private elRef: ElementRef) {
@@ -16,6 +18,9 @@ export class WeekdayGoals implements AfterViewInit {
       this.goals[day] = {};
       for (const category of this.goalCategories) {
         this.goals[day][category] = { checked: false, note: '' };
+      }
+      for (const sub of this.subgoalCategories) {
+        this.goals[day][sub] = { checked: false, note: '' };
       }
     }
   }

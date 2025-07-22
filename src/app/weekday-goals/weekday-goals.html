@@ -1,15 +1,21 @@
 <div class="weekday-wrapper">
   @for (day of weekdays; track day) {
     <div class="day-box-full">
+
+      <!-- Day Label -->
       <div class="day-label">{{ day }}</div>
+
+      <!-- Main Goals -->
       <div class="day-content">
         @for (category of goalCategories; track category) {
           <div class="goal-section">
             <label class="goal-label">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                [(ngModel)]="goals[day][category].checked"
+              />
               <span class="goal-title">{{ category }}</span>
             </label>
-<!--            <input type="text" class="goal-input" />-->
             <textarea
               class="goal-input-textarea"
               rows="1"
@@ -17,10 +23,25 @@
               #noteInput
               (input)="autoGrow(noteInput)"
             ></textarea>
-
-
           </div>
         }
+
+        <div class="subgoal-wrapper">
+          <div class="subgoal-content">
+            @for (sub of subgoalCategories; track sub) {
+              <div class="subgoal-item">
+                <label class="subgoal-label">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="goals[day][sub].checked"
+                  />
+                  {{ sub }}
+                </label>
+              </div>
+            }
+          </div>
+        </div>
+
       </div>
     </div>
   }

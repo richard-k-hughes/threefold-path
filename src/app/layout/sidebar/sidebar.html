@@ -1,4 +1,30 @@
 <nav class="sidebar">
-  <div class="tab">Log</div>
-  <div class="tab">Add Backlog Tasks</div>
+  <div class="tab" [class.active]="activeTab === 'log'" (click)="setActiveTab('log')">Log</div>
+  <div class="tab" [class.active]="activeTab === 'backlog'" (click)="setActiveTab('backlog')">Add Backlog Tasks</div>
 </nav>
+
+<div class="tab-overlay" *ngIf="activeTab !== ''" (click)="setActiveTab('')"></div>
+
+<div class="tab-content" *ngIf="activeTab === 'backlog'" (click)="$event.stopPropagation()">
+  <div class="backlog-container">
+    <h3>Add Backlog Tasks</h3>
+    <div class="backlog-form">
+      <input
+        type="text"
+        [(ngModel)]="newBacklogTask"
+        placeholder="Enter a new task"
+        (keyup.enter)="addBacklogTask()"
+      />
+      <button (click)="addBacklogTask()">Add</button>
+    </div>
+    <div class="backlog-list">
+      <h4>Current Backlog Tasks:</h4>
+      <ul>
+        <li *ngFor="let task of backlogTasks">
+          {{ task }}
+          <button class="remove-btn" (click)="removeBacklogTask(task)">×</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

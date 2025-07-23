@@ -28,13 +28,33 @@
         <button class="close-button" (click)="closeModal()">×</button>
       </div>
       <div class="modal-body">
-        <input
-          type="text"
-          id="newGoalInput"
-          [(ngModel)]="newGoalText"
-          placeholder="Enter your goal"
-          (keyup.enter)="addGoal()"
-        />
+        <div class="input-group">
+          <label for="newGoalInput">Enter Goal Manually:</label>
+          <input
+            type="text"
+            id="newGoalInput"
+            [(ngModel)]="newGoalText"
+            placeholder="Enter your goal"
+            (keyup.enter)="addGoal()"
+            (input)="onManualInputChange()"
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="backlogSelect">Or Select from Backlog:</label>
+          <select
+            id="backlogSelect"
+            [(ngModel)]="selectedBacklogTask"
+            [disabled]="backlogTasks.length === 0"
+            (change)="onBacklogSelectChange()"
+          >
+            <option value="" disabled selected>Select a task</option>
+            <option *ngFor="let task of backlogTasks" [value]="task">{{ task }}</option>
+          </select>
+          <div *ngIf="backlogTasks.length === 0" class="no-tasks-message">
+            No backlog tasks available. Add some in the "Add Backlog Tasks" tab.
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="cancel-button" (click)="closeModal()">Cancel</button>

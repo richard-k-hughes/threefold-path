@@ -13,6 +13,33 @@
           </label>
         </div>
       }
+      <div class="add-goal-row" (click)="openModal()">
+        <span class="add-icon">+</span>
+        <span class="add-text">add goal</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for adding a new goal -->
+  <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Goal</h3>
+        <button class="close-button" (click)="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          id="newGoalInput"
+          [(ngModel)]="newGoalText"
+          placeholder="Enter your goal"
+          (keyup.enter)="addGoal()"
+        />
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-button" (click)="closeModal()">Cancel</button>
+        <button class="add-button" (click)="addGoal()">Add</button>
+      </div>
     </div>
   </div>
 

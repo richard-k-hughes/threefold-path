@@ -7,21 +7,43 @@ import { AfterViewInit, Component, ElementRef } from '@angular/core';
   styleUrl: './weekly-goals.scss'
 })
 export class WeeklyGoals implements AfterViewInit {
-  primaryGoalCategories = ['Physical', 'Learning/Building', 'Music/Art'];
+  primaryGoalCategories: string[] = [];
   subgoalCategories = ['Meditation', 'Diet Adherence', 'Reading', 'Project Progress'];
 
   goals: Record<string, { checked: boolean; note: string }> = {};
+  showModal = false;
+  newGoalText = '';
 
   constructor(private elRef: ElementRef) {
-    // Initialize primary goals
-    for (const category of this.primaryGoalCategories) {
-      this.goals[category] = { checked: false, note: '' };
-    }
-
     // Initialize subgoals
     for (const sub of this.subgoalCategories) {
       this.goals[sub] = { checked: false, note: '' };
     }
+  }
+
+  addGoal(): void {
+    if (this.newGoalText.trim()) {
+      this.primaryGoalCategories.push(this.newGoalText.trim());
+      this.goals[this.newGoalText.trim()] = { checked: false, note: '' };
+      this.newGoalText = '';
+      this.showModal = false;
+    }
+  }
+
+  openModal(): void {
+    this.showModal = true;
+    this.newGoalText = '';
+    setTimeout(() => {
+      const input = this.elRef.nativeElement.querySelector('#newGoalInput');
+      if (input) {
+        input.focus();
+      }
+    }, 0);
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.newGoalText = '';
   }
 
   autoGrow(el: HTMLTextAreaElement): void {

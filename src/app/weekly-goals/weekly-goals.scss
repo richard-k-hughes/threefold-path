@@ -1,0 +1,126 @@
+.weekly-wrapper {
+  display: flex;
+  height: 50vh;
+  width: calc(100vw - 80px);
+  gap: 8px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.primary-goals-container {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  background-color: #fdfdfd;
+  padding: 10px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 15px; /* Add padding to prevent text from being hidden by scrollbar */
+}
+
+.subgoals-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  background-color: #fdfdfd;
+  padding: 10px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 15px;
+}
+
+.section-label {
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+.goals-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: auto;
+  overflow: visible;
+}
+
+.goal-section {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 10px;
+}
+
+.goal-label {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 4px;
+  width: 100%;
+
+  input[type='checkbox'] {
+    margin-right: 8px;
+  }
+}
+
+.goal-title {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.goal-input-textarea {
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.4;
+  padding: 0.4em 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  outline: none;
+  box-sizing: border-box;
+  min-height: 1.4em;
+
+  &:focus {
+    border-bottom: 2px solid #000;
+  }
+}
+
+.subgoal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.subgoal-item {
+  margin-bottom: 0.5rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.subgoal-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.subgoal-title {
+  font-style: italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.goal-label input:checked + .goal-title,
+.subgoal-label input:checked + .subgoal-title {
+  text-decoration: line-through;
+  color: #aaa;
+}

@@ -1,0 +1,35 @@
+<div class="weekly-wrapper">
+  <div class="primary-goals-container">
+    <div class="section-label">Weekly Primary Goals</div>
+    <div class="goals-content">
+      @for (category of primaryGoalCategories; track category) {
+        <div class="goal-section">
+          <label class="goal-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="goals[category].checked"
+            />
+            <span class="goal-title">{{ category }}</span>
+          </label>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="subgoals-container">
+    <div class="section-label">Weekly Subgoals</div>
+    <div class="subgoal-content">
+      @for (sub of subgoalCategories; track sub) {
+        <div class="subgoal-item">
+          <label class="subgoal-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="goals[sub].checked"
+            />
+            <span class="subgoal-title">{{ sub }}</span>
+          </label>
+        </div>
+      }
+    </div>
+  </div>
+</div>

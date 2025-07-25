@@ -1,6 +1,6 @@
 <div class="weekly-wrapper">
   <div class="primary-goals-container">
-    <div class="section-label">Weekly Primary Goals</div>
+    <div class="section-label">Weekly Primary Goals <span class="date-label">Week of {{ mondayDate | date:'MMMM d, yyyy' }}</span></div>
     <div class="goals-content">
       @for (category of primaryGoalCategories; track category) {
         <div class="goal-section">

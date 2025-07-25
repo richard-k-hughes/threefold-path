@@ -10,7 +10,13 @@ import { Subscription } from 'rxjs';
 })
 export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
   primaryGoalCategories: string[] = [];
-  subgoalCategories = ['Meditation', 'Diet Adherence', 'Reading', 'Project Progress'];
+  subgoalCategories: string[] = [];
+  mondayDate: Date = new Date(); // Property to store the Monday date
+
+  // Fixed subgoals
+  private fixedSubgoals = ['Financial Assessment', 'Water Plants'];
+  // Alternating subgoals
+  private alternatingSubgoals = ['Wash Bedding', 'Laundry'];
 
   goals: Record<string, { checked: boolean; note: string }> = {};
   showModal = false;
@@ -23,18 +29,59 @@ export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
     private elRef: ElementRef,
     private backlogService: BacklogService
   ) {
-    // Initialize subgoals
-    for (const sub of this.subgoalCategories) {
-      this.goals[sub] = { checked: false, note: '' };
-    }
+    // Subgoals are initialized in initializeSubgoalCategories()
   }
 
   ngOnInit(): void {
+    // Subscribe to backlog tasks
     this.subscription.add(
       this.backlogService.backlogTasks$.subscribe(tasks => {
         this.backlogTasks = tasks;
       })
     );
+
+    // Initialize subgoal categories with fixed subgoals and the appropriate alternating subgoal
+    this.initializeSubgoalCategories();
+
+    // Calculate the Monday date for the current week
+    this.calculateMondayDate();
+  }
+
+  /**
+   * Calculate the date of Monday in the current week
+   */
+  private calculateMondayDate(): void {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+    // Calculate the date of Monday in the current week
+    const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // If today is Sunday, go back 6 days, otherwise calculate days from Monday
+    this.mondayDate = new Date(today);
+    this.mondayDate.setDate(today.getDate() + mondayOffset);
+  }
+
+  /**
+   * Initialize subgoal categories with fixed subgoals and the appropriate alternating subgoal
+   * The last item alternates between "Wash Bedding" and "Laundry" based on the current date
+   */
+  private initializeSubgoalCategories(): void {
+    // Start with the fixed subgoals
+    this.subgoalCategories = [...this.fixedSubgoals];
+
+    // Determine which alternating subgoal to use based on the current date
+    // Use even/odd weeks to alternate between "Wash Bedding" and "Laundry"
+    const today = new Date();
+    const startOfYear = new Date(today.getFullYear(), 0, 1);
+    const weekNumber = Math.ceil((((today.getTime() - startOfYear.getTime()) / 86400000) + startOfYear.getDay() + 1) / 7);
+
+    // Add the appropriate alternating subgoal
+    const alternatingIndex = weekNumber % 2; // 0 for even weeks, 1 for odd weeks
+    this.subgoalCategories.push(this.alternatingSubgoals[alternatingIndex]);
+
+    // Initialize goals for all subgoals
+    for (const sub of this.subgoalCategories) {
+      this.goals[sub] = { checked: false, note: '' };
+    }
   }
 
   ngOnDestroy(): void {

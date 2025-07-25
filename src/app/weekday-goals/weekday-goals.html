@@ -1,9 +1,11 @@
 <div class="weekday-wrapper">
-  @for (day of weekdays; track day) {
+  @for (day of weekdays; let i = $index; track day) {
     <div class="day-box-full">
 
-      <!-- Day Label -->
-      <div class="day-label">{{ day }}</div>
+      <!-- Day Label with Date -->
+      <div class="day-label">
+        {{ day }} <span class="date-label">{{ weekdayDates[i] | date:'MMM d' }}</span>
+      </div>
 
       <!-- Main Goals -->
       <div class="day-content">
@@ -26,6 +28,7 @@
           </div>
         }
 
+        <div class="day-label">Daily Subgoals</div>
         <div class="subgoal-wrapper">
           <div class="subgoal-content">
             @for (sub of subgoalCategories; track sub) {

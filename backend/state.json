@@ -4,65 +4,155 @@
       "name": "Monday",
       "date": "Aug 4",
       "dailyGoals": [
-        { "name": "Physical",        "done": false, "description": "" },
-        { "name": "Learning/Building","done": false, "description": "" },
-        { "name": "Music/Art",       "done": false, "description": "" }
+        {
+          "name": "Physical",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": false,
+          "description": ""
+        }
       ],
       "subgoals": [
-        { "name": "Meditation",      "done": false },
-        { "name": "Diet Adherence",  "done": false }
+        {
+          "name": "Meditation",
+          "done": false
+        },
+        {
+          "name": "Diet Adherence",
+          "done": false
+        }
       ]
     },
     {
       "name": "Tuesday",
       "date": "Aug 5",
       "dailyGoals": [
-        { "name": "Physical",        "done": false, "description": "" },
-        { "name": "Learning/Building","done": false, "description": "" },
-        { "name": "Music/Art",       "done": false, "description": "" }
+        {
+          "name": "Physical",
+          "done": true,
+          "description": "asssssssssfyussssssssssssssssssddddsdddddddddddddddddddddfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": true,
+          "description": ""
+        }
       ],
       "subgoals": [
-        { "name": "Meditation",      "done": false },
-        { "name": "Diet Adherence",  "done": false }
+        {
+          "name": "Meditation",
+          "done": false
+        },
+        {
+          "name": "Diet Adherence",
+          "done": true
+        }
       ]
     },
     {
       "name": "Wednesday",
       "date": "Aug 6",
       "dailyGoals": [
-        { "name": "Physical",        "done": false, "description": "" },
-        { "name": "Learning/Building","done": false, "description": "" },
-        { "name": "Music/Art",       "done": false, "description": "" }
+        {
+          "name": "Physical",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": false,
+          "description": "stufff"
+        }
       ],
       "subgoals": [
-        { "name": "Meditation",      "done": false },
-        { "name": "Diet Adherence",  "done": false }
+        {
+          "name": "Meditation",
+          "done": false
+        },
+        {
+          "name": "Diet Adherence",
+          "done": false
+        }
       ]
     },
     {
       "name": "Thursday",
       "date": "Aug 7",
       "dailyGoals": [
-        { "name": "Physical",        "done": false, "description": "" },
-        { "name": "Learning/Building","done": false, "description": "" },
-        { "name": "Music/Art",       "done": false, "description": "" }
+        {
+          "name": "Physical",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": false,
+          "description": ""
+        }
       ],
       "subgoals": [
-        { "name": "Meditation",      "done": false },
-        { "name": "Diet Adherence",  "done": false }
+        {
+          "name": "Meditation",
+          "done": true
+        },
+        {
+          "name": "Diet Adherence",
+          "done": false
+        }
       ]
     },
     {
       "name": "Friday",
       "date": "Aug 8",
       "dailyGoals": [
-        { "name": "Physical",        "done": false, "description": "" },
-        { "name": "Learning/Building","done": false, "description": "" },
-        { "name": "Music/Art",       "done": false, "description": "" }
+        {
+          "name": "Physical",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": false,
+          "description": ""
+        }
       ],
       "subgoals": [
-        { "name": "Meditation",      "done": false },
-        { "name": "Diet Adherence",  "done": false }
+        {
+          "name": "Meditation",
+          "done": false
+        },
+        {
+          "name": "Diet Adherence",
+          "done": false
+        }
       ]
     }
   ]

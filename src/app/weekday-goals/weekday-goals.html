@@ -14,17 +14,21 @@
             <label class="goal-label">
               <input
                 type="checkbox"
-                [(ngModel)]="goals[day][category].checked"
+                [checked]="goals[day][category].checked"
+                (change)="onCheckboxChange(day, category)"
               />
               <span class="goal-title">{{ category }}</span>
             </label>
             <textarea
+              #noteInput
               class="goal-input-textarea"
               rows="1"
-              [(ngModel)]="goals[day][category].note"
-              #noteInput
-              (input)="autoGrow(noteInput)"
-            ></textarea>
+              [value]="goals[day][category].note"
+              (input)="
+                autoGrow(noteInput);
+                onNoteChange(day, category, noteInput.value)
+              "
+                       ></textarea>
           </div>
         }
 
@@ -36,7 +40,8 @@
                 <label class="subgoal-label">
                   <input
                     type="checkbox"
-                    [(ngModel)]="goals[day][sub].checked"
+                    [checked]="goals[day][sub].checked"
+                    (change)="onCheckboxChange(day, sub)"
                   />
                   <span class="subgoal-title">{{ sub }}</span>
                 </label>

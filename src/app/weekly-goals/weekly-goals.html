@@ -1,13 +1,18 @@
 <div class="weekly-wrapper">
   <div class="primary-goals-container">
-    <div class="section-label">Weekly Primary Goals <span class="date-label">Week of {{ mondayDate | date:'MMMM d, yyyy' }}</span></div>
+    <div class="section-label">
+      Weekly Primary Goals
+      <span class="date-label">Week of {{ mondayDate | date:'MMMM d, yyyy' }}</span>
+    </div>
+
     <div class="goals-content">
-      @for (category of primaryGoalCategories; track category) {
+      @for (category of primaryGoalCategories; let i = $index; track category) {
         <div class="goal-section">
           <label class="goal-label">
             <input
               type="checkbox"
-              [(ngModel)]="goals[category].checked"
+              [checked]="goals[category]?.checked"
+              (change)="toggleWeeklyGoal(i)"
             />
             <span class="goal-title">{{ category }}</span>
           </label>
@@ -21,57 +26,67 @@
   </div>
 
   <!-- Modal for adding a new goal -->
-  <div class="modal-overlay" *ngIf="showModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Add New Goal</h3>
-        <button class="close-button" (click)="closeModal()">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="input-group">
-          <label for="newGoalInput">Enter Goal Manually:</label>
-          <input
-            type="text"
-            id="newGoalInput"
-            [(ngModel)]="newGoalText"
-            placeholder="Enter your goal"
-            (keyup.enter)="addGoal()"
-            (input)="onManualInputChange()"
-          />
+  @if (showModal) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add New Goal</h3>
+          <button class="close-button" (click)="closeModal()">×</button>
         </div>
 
-        <div class="input-group">
-          <label for="backlogSelect">Or Select from Backlog:</label>
-          <select
-            id="backlogSelect"
-            [(ngModel)]="selectedBacklogTask"
-            [disabled]="backlogTasks.length === 0"
-            (change)="onBacklogSelectChange()"
-          >
-            <option value="" disabled selected>Select a task</option>
-            <option *ngFor="let task of backlogTasks" [value]="task">{{ task }}</option>
-          </select>
-          <div *ngIf="backlogTasks.length === 0" class="no-tasks-message">
-            No backlog tasks available. Add some in the "Add Backlog Tasks" tab.
+        <div class="modal-body">
+          <div class="input-group">
+            <label for="newGoalInput">Enter Goal Manually:</label>
+            <input
+              type="text"
+              id="newGoalInput"
+              [(ngModel)]="newGoalText"
+              placeholder="Enter your goal"
+              (keyup.enter)="addGoal()"
+              (input)="onManualInputChange()"
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="backlogSelect">Or Select from Backlog:</label>
+            <select
+              id="backlogSelect"
+              [(ngModel)]="selectedBacklogTask"
+              [disabled]="backlogTasks.length === 0"
+              (change)="onBacklogSelectChange()"
+            >
+              <option value="" disabled selected>Select a task</option>
+              @for (task of backlogTasks; track task) {
+                <option [value]="task">{{ task }}</option>
+              }
+            </select>
+
+            @if (backlogTasks.length === 0) {
+              <div class="no-tasks-message">
+                No backlog tasks available. Add some in the "Add Backlog Tasks" tab.
+              </div>
+            }
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="cancel-button" (click)="closeModal()">Cancel</button>
-        <button class="add-button" (click)="addGoal()">Add</button>
+
+        <div class="modal-footer">
+          <button class="cancel-button" (click)="closeModal()">Cancel</button>
+          <button class="add-button" (click)="addGoal()">Add</button>
+        </div>
       </div>
     </div>
-  </div>
+  }
 
   <div class="subgoals-container">
     <div class="section-label">Weekly Subgoals</div>
     <div class="subgoal-content">
-      @for (sub of subgoalCategories; track sub) {
+      @for (sub of subgoalCategories; let j = $index; track sub) {
         <div class="subgoal-item">
           <label class="subgoal-label">
             <input
               type="checkbox"
-              [(ngModel)]="goals[sub].checked"
+              [checked]="goals[sub]?.checked"
+              (change)="toggleWeeklySubgoal(j)"
             />
             <span class="subgoal-title">{{ sub }}</span>
           </label>

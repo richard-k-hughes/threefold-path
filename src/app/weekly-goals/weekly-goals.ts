@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import { BacklogService } from '../services/backlog.service';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { BacklogService } from '../services/backlog.service';
+import { WeekdayStateService, WeekState } from '../services/weekday-state.service';
 
 @Component({
   selector: 'app-weekly-goals',
@@ -9,131 +10,112 @@ import { Subscription } from 'rxjs';
   styleUrl: './weekly-goals.scss'
 })
 export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
-  primaryGoalCategories: string[] = [];
-  subgoalCategories: string[] = [];
-  mondayDate: Date = new Date(); // Property to store the Monday date
+  // === UI state you already had ===
+  primaryGoalCategories: string[] = [];   // names of weekly primary goals
+  subgoalCategories: string[] = [];       // names of weekly subgoals
+  mondayDate: Date = new Date();
 
-  // Fixed subgoals
+  // fixed/alternating subgoals
   private fixedSubgoals = ['Financial Assessment', 'Water Plants'];
-  // Alternating subgoals
   private alternatingSubgoals = ['Wash Bedding', 'Laundry'];
 
-  goals: Record<string, { checked: boolean; note: string }> = {};
+  // checkbox state keyed by name (weekly only; no descriptions here)
+  goals: Record<string, { checked: boolean }> = {};
+
+  // modal / backlog controls (unchanged)
   showModal = false;
   newGoalText = '';
   backlogTasks: string[] = [];
   selectedBacklogTask = '';
-  private subscription: Subscription = new Subscription();
+
+  // internals
+  private subs = new Subscription();
+  private lastState!: WeekState; // latest full state snapshot from service
 
   constructor(
-    private elRef: ElementRef,
-    private backlogService: BacklogService
-  ) {
-    // Subgoals are initialized in initializeSubgoalCategories()
-  }
+    private elRef: ElementRef<HTMLElement>,
+    private backlogService: BacklogService,
+    private stateSvc: WeekdayStateService
+  ) {}
+
+  // -------------------- lifecycle --------------------
 
   ngOnInit(): void {
-    // Subscribe to backlog tasks
-    this.subscription.add(
+    // backlog subscription (unchanged)
+    this.subs.add(
       this.backlogService.backlogTasks$.subscribe(tasks => {
         this.backlogTasks = tasks;
       })
     );
 
-    // Initialize subgoal categories with fixed subgoals and the appropriate alternating subgoal
-    this.initializeSubgoalCategories();
-
-    // Calculate the Monday date for the current week
+    // compute current week Monday
     this.calculateMondayDate();
+
+    // load weekly state from service; initialize if missing
+    this.subs.add(
+      this.stateSvc.state$.subscribe((s) => {
+        this.lastState = s;
+
+        // if weekly block is missing/empty, initialize once from your rules
+        const needsInit =
+          !s.weekly ||
+          ((!s.weekly.goals || s.weekly.goals.length === 0) &&
+            (!s.weekly.subgoals || s.weekly.subgoals.length === 0));
+
+        if (needsInit) {
+          // build subgoals from fixed + alternating rule
+          const initSubs = this.computeAlternatingSubgoals();
+          // start with no primary goals (user-driven)
+          const next: WeekState = {
+            ...s,
+            weekly: {
+              goals: [],
+              subgoals: initSubs.map(n => ({ name: n, done: false }))
+            }
+          };
+          this.stateSvc.save(next);
+          return; // will re-emit with initialized data
+        }
+
+        // map service → component fields
+        this.primaryGoalCategories = (s.weekly.goals ?? []).map(g => g.name);
+        this.subgoalCategories     = (s.weekly.subgoals ?? []).map(sg => sg.name);
+
+        // rebuild the checked map
+        const map: Record<string, { checked: boolean }> = {};
+        for (const g of s.weekly.goals ?? []) map[g.name] = { checked: !!g.done };
+        for (const sg of s.weekly.subgoals ?? []) map[sg.name] = { checked: !!sg.done };
+        this.goals = map;
+      })
+    );
   }
 
-  /**
-   * Calculate the date of Monday in the current week
-   */
-  private calculateMondayDate(): void {
-    const today = new Date();
-    const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-    // Calculate the date of Monday in the current week
-    const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // If today is Sunday, go back 6 days, otherwise calculate days from Monday
-    this.mondayDate = new Date(today);
-    this.mondayDate.setDate(today.getDate() + mondayOffset);
-  }
-
-  /**
-   * Initialize subgoal categories with fixed subgoals and the appropriate alternating subgoal
-   * The last item alternates between "Wash Bedding" and "Laundry" based on the current date
-   */
-  private initializeSubgoalCategories(): void {
-    // Start with the fixed subgoals
-    this.subgoalCategories = [...this.fixedSubgoals];
-
-    // Determine which alternating subgoal to use based on the current date
-    // Use even/odd weeks to alternate between "Wash Bedding" and "Laundry"
-    const today = new Date();
-    const startOfYear = new Date(today.getFullYear(), 0, 1);
-    const weekNumber = Math.ceil((((today.getTime() - startOfYear.getTime()) / 86400000) + startOfYear.getDay() + 1) / 7);
-
-    // Add the appropriate alternating subgoal
-    const alternatingIndex = weekNumber % 2; // 0 for even weeks, 1 for odd weeks
-    this.subgoalCategories.push(this.alternatingSubgoals[alternatingIndex]);
-
-    // Initialize goals for all subgoals
-    for (const sub of this.subgoalCategories) {
-      this.goals[sub] = { checked: false, note: '' };
-    }
+  ngAfterViewInit() {
+    // keep your existing auto-grow binding for any textareas you might add later
+    const nodes = this.elRef.nativeElement.querySelectorAll('.goal-input-textarea');
+    (Array.from(nodes) as HTMLTextAreaElement[]).forEach((textarea) => {
+      const autoResize = () => {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      };
+      autoResize();
+      textarea.addEventListener('input', autoResize);
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subs.unsubscribe();
   }
 
-  onManualInputChange(): void {
-    // If user types in the manual input, clear the backlog selection
-    if (this.newGoalText.trim()) {
-      this.selectedBacklogTask = '';
-    }
-  }
-
-  onBacklogSelectChange(): void {
-    // If user selects from backlog, clear the manual input
-    if (this.selectedBacklogTask) {
-      this.newGoalText = '';
-    }
-  }
-
-  addGoal(): void {
-    let goalText = '';
-
-    // Prioritize manual input if it has content
-    if (this.newGoalText.trim()) {
-      goalText = this.newGoalText.trim();
-    } else if (this.selectedBacklogTask) {
-      goalText = this.selectedBacklogTask;
-    }
-
-    if (goalText) {
-      this.primaryGoalCategories.push(goalText);
-      this.goals[goalText] = { checked: false, note: '' };
-      this.resetForm();
-      this.showModal = false;
-    }
-  }
-
-  resetForm(): void {
-    this.newGoalText = '';
-    this.selectedBacklogTask = '';
-  }
+  // -------------------- UI helpers (unchanged) --------------------
 
   openModal(): void {
     this.showModal = true;
     this.resetForm();
 
     setTimeout(() => {
-      const input = this.elRef.nativeElement.querySelector('#newGoalInput');
-      if (input) {
-        input.focus();
-      }
+      const input = this.elRef.nativeElement.querySelector('#newGoalInput') as HTMLInputElement | null;
+      input?.focus();
     }, 0);
   }
 
@@ -142,22 +124,98 @@ export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
     this.resetForm();
   }
 
+  resetForm(): void {
+    this.newGoalText = '';
+    this.selectedBacklogTask = '';
+  }
+
+  onManualInputChange(): void {
+    if (this.newGoalText.trim()) this.selectedBacklogTask = '';
+  }
+
+  onBacklogSelectChange(): void {
+    if (this.selectedBacklogTask) this.newGoalText = '';
+  }
+
   autoGrow(el: HTMLTextAreaElement): void {
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
   }
 
-  ngAfterViewInit() {
-    const textareas = this.elRef.nativeElement.querySelectorAll('.goal-input-textarea');
-    textareas.forEach((textarea: HTMLTextAreaElement) => {
-      const autoResize = () => {
-        textarea.style.height = 'auto'; // reset
-        textarea.style.height = `${textarea.scrollHeight}px`; // grow
-      };
+  // -------------------- weekly logic + persistence --------------------
 
-      // resize now + on input
-      autoResize();
-      textarea.addEventListener('input', autoResize);
-    });
+  addGoal(): void {
+    let goalText = '';
+    if (this.newGoalText.trim()) goalText = this.newGoalText.trim();
+    else if (this.selectedBacklogTask) goalText = this.selectedBacklogTask;
+
+    if (!goalText) return;
+
+    // update UI
+    this.primaryGoalCategories.push(goalText);
+    this.goals[goalText] = { checked: false };
+    this.closeModal();
+
+    // persist
+    this.persistWeekly();
+  }
+
+  removeWeeklyGoal(i: number): void {
+    const name = this.primaryGoalCategories[i];
+    if (!name) return;
+
+    this.primaryGoalCategories.splice(i, 1);
+    delete this.goals[name];
+
+    this.persistWeekly();
+  }
+
+  toggleWeeklyGoal(i: number): void {
+    const name = this.primaryGoalCategories[i];
+    if (!name) return;
+    this.goals[name].checked = !this.goals[name].checked;
+    this.persistWeekly();
+  }
+
+  toggleWeeklySubgoal(i: number): void {
+    const name = this.subgoalCategories[i];
+    if (!name) return;
+    this.goals[name].checked = !this.goals[name].checked;
+    this.persistWeekly();
+  }
+
+  private persistWeekly(): void {
+    if (!this.lastState) return;
+
+    const next: WeekState = {
+      ...this.lastState,
+      weekly: {
+        goals: this.primaryGoalCategories.map(n => ({ name: n, done: this.goals[n]?.checked ?? false })),
+        subgoals: this.subgoalCategories.map(n => ({ name: n, done: this.goals[n]?.checked ?? false }))
+      }
+    };
+
+    this.stateSvc.save(next);
+  }
+
+  // -------------------- date / alternating helpers --------------------
+
+  private calculateMondayDate(): void {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0=Sun..6=Sat
+    const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
+    this.mondayDate = new Date(today);
+    this.mondayDate.setDate(today.getDate() + mondayOffset);
+  }
+
+  /** returns fixed + one alternating subgoal for this week */
+  private computeAlternatingSubgoals(): string[] {
+    const today = new Date();
+    const startOfYear = new Date(today.getFullYear(), 0, 1);
+    const weekNumber = Math.ceil(
+      (((today.getTime() - startOfYear.getTime()) / 86400000) + startOfYear.getDay() + 1) / 7
+    );
+    const alternatingIndex = weekNumber % 2;
+    return [...this.fixedSubgoals, this.alternatingSubgoals[alternatingIndex]];
   }
 }

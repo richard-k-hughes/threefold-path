@@ -58,15 +58,21 @@ export class WeekdayStateService {
 
   private shape(raw?: Partial<WeekState>): WeekState {
     const base = this.defaultState();
+
+    // <-- key change: if the server has days: [], use base.days instead
+    const days = (raw?.days && raw.days.length > 0) ? raw.days : base.days;
+
     return {
       ...base,
       ...raw,
+      days, // <-- use the computed days
       weekly: {
         ...base.weekly,
         ...(raw?.weekly ?? {})
       }
     };
   }
+
 
   private load() {
     this.http.get<Partial<WeekState>>(`${API}/state`)

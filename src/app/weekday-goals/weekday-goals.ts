@@ -83,39 +83,54 @@ export class WeekdayGoals implements AfterViewInit, OnInit {
 
   // ===== Persisting handlers (now use updateDays) =====
 
-  onCheckboxChange(day: string, category: string): void {
+  onCheckboxChange(dayIdx: number, day: string, category: string): void {
     const cur = this.goals[day][category];
     cur.checked = !cur.checked;
 
-    this.stateSvc.updateDays((days: DayState[]) => {
-      const d = days.find(x => x.name === day);
-      if (!d) return;
-
-      // keep stored date in sync with UI
-      const idx = this.weekdays.indexOf(day);
-      if (idx > -1 && this.weekdayDates[idx]) {
-        d.date = this.weekdayDates[idx].toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    this.stateSvc.updateDays(days => {
+      // create the day if missing
+      let d = days[dayIdx];
+      if (!d) {
+        d = {
+          name: day,
+          date: this.weekdayDates[dayIdx]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) ?? '',
+          dailyGoals: this.goalCategories.map(n => ({ name: n, done: false, description: '' })),
+          subgoals: this.subgoalCategories.map(n => ({ name: n, done: false }))
+        };
+        days[dayIdx] = d;
       }
 
-      if (this.goalCategories.includes(category)) {
-        const g = d.dailyGoals.find(x => x.name === category);
-        if (g) g.done = cur.checked;
-      } else if (this.subgoalCategories.includes(category)) {
-        const sg = d.subgoals.find(x => x.name === category);
-        if (sg) sg.done = cur.checked;
-      }
+      // flip the correct item
+      const g  = d.dailyGoals.find(x => x.name === category);
+      const sg = d.subgoals.find(x => x.name === category);
+      if (g)  g.done  = cur.checked;
+      if (sg) sg.done = cur.checked;
     });
   }
 
-  onNoteChange(day: string, category: string, note: string): void {
+  onNoteChange(dayIdx: number, day: string, category: string, note: string): void {
     this.goals[day][category].note = note;
 
-    this.stateSvc.updateDays((days: DayState[]) => {
-      const d = days.find(x => x.name === day);
-      if (!d) return;
+    this.stateSvc.updateDays(days => {
+      // ensure day exists
+      let d = days[dayIdx];
+      if (!d) {
+        d = {
+          name: day,
+          date: this.weekdayDates[dayIdx]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) ?? '',
+          dailyGoals: this.goalCategories.map(n => ({ name: n, done: false, description: '' })),
+          subgoals: this.subgoalCategories.map(n => ({ name: n, done: false }))
+        };
+        days[dayIdx] = d;
+      }
 
-      const g = d.dailyGoals.find(x => x.name === category);
-      if (g) g.description = note; // subgoals have no notes
+      // ensure goal exists, then set note
+      let g = d.dailyGoals.find(x => x.name === category);
+      if (!g) {
+        g = { name: category, done: false, description: '' };
+        d.dailyGoals.push(g);
+      }
+      g.description = note;
     });
   }
 

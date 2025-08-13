@@ -1,16 +1,163 @@
 {
-  "days": [],
+  "days": [
+    {
+      "name": "Monday",
+      "date": "Aug 4",
+      "dailyGoals": [
+        {
+          "name": "Physical",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Learning/Building",
+          "done": true,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": false,
+          "description": ""
+        }
+      ],
+      "subgoals": [
+        {
+          "name": "Meditation",
+          "done": false
+        },
+        {
+          "name": "Diet Adherence",
+          "done": true
+        }
+      ]
+    },
+    {
+      "name": "Tuesday",
+      "date": "Aug 5",
+      "dailyGoals": [
+        {
+          "name": "Physical",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": true,
+          "description": "asdasd"
+        }
+      ],
+      "subgoals": [
+        {
+          "name": "Meditation",
+          "done": false
+        },
+        {
+          "name": "Diet Adherence",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Wednesday",
+      "date": "Aug 6",
+      "dailyGoals": [
+        {
+          "name": "Physical",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": false,
+          "description": "daaaaaaaaaaaazaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "subgoals": [
+        {
+          "name": "Meditation",
+          "done": false
+        },
+        {
+          "name": "Diet Adherence",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Thursday",
+      "date": "Aug 7",
+      "dailyGoals": [
+        {
+          "name": "Physical",
+          "done": true,
+          "description": "bbbbbsbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbxbbbbbbbbbbbbbb"
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Music/Art",
+          "done": false,
+          "description": ""
+        }
+      ],
+      "subgoals": [
+        {
+          "name": "Meditation",
+          "done": false
+        },
+        {
+          "name": "Diet Adherence",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Friday",
+      "date": "Aug 8",
+      "dailyGoals": [
+        {
+          "name": "Physical",
+          "done": false,
+          "description": ""
+        },
+        {
+          "name": "Learning/Building",
+          "done": false,
+          "description": "line"
+        },
+        {
+          "name": "Music/Art",
+          "done": false,
+          "description": ""
+        }
+      ],
+      "subgoals": [
+        {
+          "name": "Meditation",
+          "done": true
+        },
+        {
+          "name": "Diet Adherence",
+          "done": true
+        }
+      ]
+    }
+  ],
   "weekly": {
-    "goals": [
-      {
-        "name": "here",
-        "done": true
-      },
-      {
-        "name": "manual",
-        "done": false
-      }
-    ],
+    "goals": [],
     "subgoals": [
       {
         "name": "Financial Assessment",
@@ -22,7 +169,7 @@
       },
       {
         "name": "Laundry",
-        "done": true
+        "done": false
       }
     ]
   }

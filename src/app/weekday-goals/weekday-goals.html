@@ -1,13 +1,10 @@
 <div class="weekday-wrapper">
-  @for (day of weekdays; let i = $index; track day) {
+  @for (day of weekdays; let dayIdx = $index; track day) {
     <div class="day-box-full">
-
-      <!-- Day Label with Date -->
       <div class="day-label">
-        {{ day }} <span class="date-label">{{ weekdayDates[i] | date:'MMM d' }}</span>
+        {{ day }} <span class="date-label">{{ weekdayDates[dayIdx] | date:'MMM d' }}</span>
       </div>
 
-      <!-- Main Goals -->
       <div class="day-content">
         @for (category of goalCategories; track category) {
           <div class="goal-section">
@@ -15,7 +12,7 @@
               <input
                 type="checkbox"
                 [checked]="goals[day][category].checked"
-                (change)="onCheckboxChange(day, category)"
+                (change)="onCheckboxChange(dayIdx, day, category)"
               />
               <span class="goal-title">{{ category }}</span>
             </label>
@@ -24,11 +21,8 @@
               class="goal-input-textarea"
               rows="1"
               [value]="goals[day][category].note"
-              (input)="
-                autoGrow(noteInput);
-                onNoteChange(day, category, noteInput.value)
-              "
-                       ></textarea>
+              (input)="autoGrow(noteInput); onNoteChange(dayIdx, day, category, noteInput.value)"
+            ></textarea>
           </div>
         }
 
@@ -41,7 +35,7 @@
                   <input
                     type="checkbox"
                     [checked]="goals[day][sub].checked"
-                    (change)="onCheckboxChange(day, sub)"
+                    (change)="onCheckboxChange(dayIdx, day, sub)"
                   />
                   <span class="subgoal-title">{{ sub }}</span>
                 </label>

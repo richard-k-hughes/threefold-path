@@ -1,7 +1,16 @@
 {
   "days": [],
   "weekly": {
-    "goals": [],
+    "goals": [
+      {
+        "name": "here",
+        "done": true
+      },
+      {
+        "name": "manual",
+        "done": false
+      }
+    ],
     "subgoals": [
       {
         "name": "Financial Assessment",
@@ -12,8 +21,8 @@
         "done": false
       },
       {
-        "name": "Wash Bedding",
-        "done": false
+        "name": "Laundry",
+        "done": true
       }
     ]
   }

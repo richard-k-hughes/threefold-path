@@ -30,7 +30,7 @@ export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
 
   // internals
   private subs = new Subscription();
-  private lastState!: WeekState; // latest full state snapshot from service
+  private lastState!: WeekState; // keep for parity with your original file
 
   constructor(
     private elRef: ElementRef<HTMLElement>,
@@ -65,16 +65,12 @@ export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
         if (needsInit) {
           // build subgoals from fixed + alternating rule
           const initSubs = this.computeAlternatingSubgoals();
-          // start with no primary goals (user-driven)
-          const next: WeekState = {
-            ...s,
-            weekly: {
-              goals: [],
-              subgoals: initSubs.map(n => ({ name: n, done: false }))
-            }
-          };
-          this.stateSvc.save(next);
-          return; // will re-emit with initialized data
+          // initialize ONLY the weekly section via updateWeekly (doesn't touch days)
+          this.stateSvc.updateWeekly(w => {
+            w.goals = [];
+            w.subgoals = initSubs.map(n => ({ name: n, done: false }));
+          });
+          return; // service will emit again with the initialized data
         }
 
         // map service → component fields
@@ -156,7 +152,7 @@ export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
     this.goals[goalText] = { checked: false };
     this.closeModal();
 
-    // persist
+    // persist ONLY weekly via service merge
     this.persistWeekly();
   }
 
@@ -185,17 +181,16 @@ export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private persistWeekly(): void {
-    if (!this.lastState) return;
-
-    const next: WeekState = {
-      ...this.lastState,
-      weekly: {
-        goals: this.primaryGoalCategories.map(n => ({ name: n, done: this.goals[n]?.checked ?? false })),
-        subgoals: this.subgoalCategories.map(n => ({ name: n, done: this.goals[n]?.checked ?? false }))
-      }
-    };
-
-    this.stateSvc.save(next);
+    this.stateSvc.updateWeekly(w => {
+      w.goals = this.primaryGoalCategories.map(n => ({
+        name: n,
+        done: this.goals[n]?.checked ?? false
+      }));
+      w.subgoals = this.subgoalCategories.map(n => ({
+        name: n,
+        done: this.goals[n]?.checked ?? false
+      }));
+    });
   }
 
   // -------------------- date / alternating helpers --------------------

@@ -1,31 +1,21 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of, tap, switchMap, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-export interface MainGoal {
-  name: string;
-  done: boolean;
-  description: string;
-}
-export interface Subgoal {
-  name: string;
-  done: boolean;
-}
+export interface MainGoal { name: string; done: boolean; description: string; }
+export interface Subgoal { name: string; done: boolean; }
 export interface DayState {
   name: string;
   date: string;
   dailyGoals: MainGoal[];
   subgoals: Subgoal[];
 }
-export interface WeekState {
-  days: DayState[];
-  weekly: {
-    goals: WeeklyGoal[];
-    subgoals: WeeklySubgoal[];
-  };
-}
 export interface WeeklyGoal { name: string; done: boolean; }
 export interface WeeklySubgoal { name: string; done: boolean; }
+export interface WeekState {
+  days: DayState[];
+  weekly: { goals: WeeklyGoal[]; subgoals: WeeklySubgoal[]; };
+}
 
 const LOCAL_KEY = 'weekdayState';
 const API = 'http://localhost:3000';
@@ -38,6 +28,9 @@ export class WeekdayStateService {
   constructor(private http: HttpClient) {
     this.load();
   }
+
+  // Handy if you need the current value
+  get snapshot(): WeekState { return this.subj.value; }
 
   private defaultState(): WeekState {
     const labels = ['Physical','Learning/Building','Music/Art'];
@@ -63,19 +56,23 @@ export class WeekdayStateService {
     };
   }
 
+  private shape(raw?: Partial<WeekState>): WeekState {
+    const base = this.defaultState();
+    return {
+      ...base,
+      ...raw,
+      weekly: {
+        ...base.weekly,
+        ...(raw?.weekly ?? {})
+      }
+    };
+  }
+
   private load() {
     this.http.get<Partial<WeekState>>(`${API}/state`)
       .pipe(
-        tap(raw => {
-          // tolerate older files missing `weekly`
-          const merged: WeekState = {
-            ...this.defaultState(),
-            ...raw,
-            weekly: {
-              ...this.defaultState().weekly,
-              ...(raw?.weekly ?? {})
-            }
-          };
+        map(raw => this.shape(raw)),
+        tap(merged => {
           this.subj.next(merged);
           localStorage.setItem(LOCAL_KEY, JSON.stringify(merged));
         }),
@@ -93,24 +90,54 @@ export class WeekdayStateService {
       .subscribe();
   }
 
-  /** call whenever you mutate the state */
+  /**
+   * Full replace — only use if you truly intend to overwrite both days & weekly
+   * Prefer updateDays / updateWeekly to avoid stomping concurrent edits.
+   */
   save(state: WeekState) {
-    this.subj.next(state);
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(state));
-    this.http.put(`${API}/state`, state)
-      .pipe(catchError(_ => of(null)))
-      .subscribe();
+    const shaped = this.shape(state);
+    this.subj.next(shaped);
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(shaped));
+    this.http.put(`${API}/state`, shaped).pipe(catchError(_ => of(null))).subscribe();
   }
 
-  // Optional convenience updaters:
-  updateWeekly(updater: (w: WeekState['weekly']) => void) {
-    const next = structuredClone(this.subj.value);
-    updater(next.weekly);
-    this.save(next);
+  /** Safely update ONLY the days array, merging with the latest server copy first */
+  updateDays(updater: (days: WeekState['days']) => void) {
+    this.http.get<Partial<WeekState>>(`${API}/state`).pipe(
+      map(raw => this.shape(raw)),
+      map(current => {
+        const next: WeekState = JSON.parse(JSON.stringify(current)); // deep clone
+        updater(next.days);
+        return next;
+      }),
+      switchMap(next =>
+        this.http.put<WeekState>(`${API}/state`, next).pipe(map(() => next))
+      ),
+      tap(next => {
+        this.subj.next(next);
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(next));
+      }),
+      catchError(_ => of(null))
+    ).subscribe();
   }
-  updateDays(updater: (d: WeekState['days']) => void) {
-    const next = structuredClone(this.subj.value);
-    updater(next.days);
-    this.save(next);
+
+  /** Safely update ONLY the weekly block, merging with the latest server copy first */
+  updateWeekly(updater: (w: WeekState['weekly']) => void) {
+    this.http.get<Partial<WeekState>>(`${API}/state`).pipe(
+      map(raw => this.shape(raw)),
+      map(current => {
+        const next: WeekState = JSON.parse(JSON.stringify(current));
+        updater(next.weekly);
+        return next;
+      }),
+      switchMap(next =>
+        this.http.put<WeekState>(`${API}/state`, next).pipe(map(() => next))
+      ),
+      tap(next => {
+        this.subj.next(next);
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(next));
+      }),
+      catchError(_ => of(null))
+    ).subscribe();
   }
 }

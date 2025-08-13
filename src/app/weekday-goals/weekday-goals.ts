@@ -1,7 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-const API_BASE = 'http://localhost:3000';
+import { WeekdayStateService, DayState } from '../services/weekday-state.service';
 
 @Component({
   selector: 'app-weekday-goals',
@@ -15,9 +13,14 @@ export class WeekdayGoals implements AfterViewInit, OnInit {
   goalCategories = ['Physical', 'Learning/Building', 'Music/Art'];
   subgoalCategories = ['Meditation', 'Diet Adherence'];
 
+  // UI model (checkbox + note)
   goals: Record<string, Record<string, { checked: boolean; note: string }>> = {};
 
-  constructor(private elRef: ElementRef, private http: HttpClient) {
+  constructor(
+    private elRef: ElementRef,
+    private stateSvc: WeekdayStateService
+  ) {
+    // seed empty structure so template always has keys
     for (const day of this.weekdays) {
       this.goals[day] = {};
       for (const category of this.goalCategories) {
@@ -31,75 +34,45 @@ export class WeekdayGoals implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.calculateWeekDates();
-    this.loadState();
-  }
 
-  private loadState(): void {
-    this.http.get<{ days: any[] }>(`${API_BASE}/state`)
-      .subscribe(state => {
-        state.days.forEach(dayState => {
-          const day = dayState.name;
-          // map main goals
-          dayState.dailyGoals.forEach((g: any) => {
-            if (this.goals[day] && this.goals[day][g.name]) {
-              this.goals[day][g.name].checked = g.done;
-              this.goals[day][g.name].note = g.description;
-            }
-          });
-          // map subgoals
-          dayState.subgoals.forEach((s: any) => {
-            if (this.goals[day] && this.goals[day][s.name]) {
-              this.goals[day][s.name].checked = s.done;
-            }
-          });
+    // Load from service → map into local UI state
+    this.stateSvc.state$.subscribe(state => {
+      state.days.forEach(dayState => {
+        const day = dayState.name;
+
+        // map main goals
+        dayState.dailyGoals.forEach(g => {
+          if (!this.goals[day]) this.goals[day] = {} as any;
+          if (!this.goals[day][g.name]) this.goals[day][g.name] = { checked: false, note: '' };
+          this.goals[day][g.name].checked = !!g.done;
+          this.goals[day][g.name].note = g.description ?? '';
         });
-      }, err => console.error('Failed to load state', err));
+
+        // map subgoals (no notes)
+        dayState.subgoals.forEach(s => {
+          if (!this.goals[day]) this.goals[day] = {} as any;
+          if (!this.goals[day][s.name]) this.goals[day][s.name] = { checked: false, note: '' };
+          this.goals[day][s.name].checked = !!s.done;
+        });
+      });
+
+      // expand prefilled notes after DOM updates
+      setTimeout(() => {
+        const root = this.elRef.nativeElement as HTMLElement;
+        const nodes = root.querySelectorAll('.goal-input') as NodeListOf<HTMLTextAreaElement>;
+        nodes.forEach(ta => this.autoGrow(ta));
+      }, 0);
+    });
   }
 
-  private saveState(): void {
-    const payload = {
-      days: this.weekdays.map((day, idx) => ({
-        name: day,
-        date: this.weekdayDates[idx].toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        dailyGoals: this.goalCategories.map(name => ({
-          name,
-          done: this.goals[day][name].checked,
-          description: this.goals[day][name].note
-        })),
-        subgoals: this.subgoalCategories.map(name => ({
-          name,
-          done: this.goals[day][name].checked
-        }))
-      }))
-    };
-    this.http.put(`${API_BASE}/state`, payload)
-      .subscribe({ error: err => console.error('Failed to save state', err) });
-  }
-
-  onCheckboxChange(day: string, category: string): void {
-    this.goals[day][category].checked = !this.goals[day][category].checked;
-    this.saveState();
-  }
-
-  onNoteChange(day: string, category: string, note: string): void {
-    this.goals[day][category].note = note;
-    this.saveState();
-  }
-
-
-  /**
-   * Calculate dates for the current week (Monday to Friday)
-   */
+  /** Calculate dates for the current week (Monday to Friday) */
   calculateWeekDates(): void {
     const today = new Date();
-    const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-    // Calculate the date of Monday in the current week
-    const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // If today is Sunday, go back 6 days, otherwise calculate days from Monday
+    const currentDay = today.getDay(); // 0=Sun .. 6=Sat
+    const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
     const monday = new Date(today);
     monday.setDate(today.getDate() + mondayOffset);
 
-    // Generate dates for Monday through Friday
     this.weekdayDates = [];
     for (let i = 0; i < 5; i++) {
       const date = new Date(monday);
@@ -108,24 +81,60 @@ export class WeekdayGoals implements AfterViewInit, OnInit {
     }
   }
 
+  // ===== Persisting handlers (now use updateDays) =====
+
+  onCheckboxChange(day: string, category: string): void {
+    const cur = this.goals[day][category];
+    cur.checked = !cur.checked;
+
+    this.stateSvc.updateDays((days: DayState[]) => {
+      const d = days.find(x => x.name === day);
+      if (!d) return;
+
+      // keep stored date in sync with UI
+      const idx = this.weekdays.indexOf(day);
+      if (idx > -1 && this.weekdayDates[idx]) {
+        d.date = this.weekdayDates[idx].toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }
+
+      if (this.goalCategories.includes(category)) {
+        const g = d.dailyGoals.find(x => x.name === category);
+        if (g) g.done = cur.checked;
+      } else if (this.subgoalCategories.includes(category)) {
+        const sg = d.subgoals.find(x => x.name === category);
+        if (sg) sg.done = cur.checked;
+      }
+    });
+  }
+
+  onNoteChange(day: string, category: string, note: string): void {
+    this.goals[day][category].note = note;
+
+    this.stateSvc.updateDays((days: DayState[]) => {
+      const d = days.find(x => x.name === day);
+      if (!d) return;
+
+      const g = d.dailyGoals.find(x => x.name === category);
+      if (g) g.description = note; // subgoals have no notes
+    });
+  }
+
+  // ===== UI helpers (unchanged) =====
+
   autoGrow(el: HTMLTextAreaElement): void {
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
   }
 
   ngAfterViewInit() {
-    const textareas = this.elRef.nativeElement.querySelectorAll('.goal-input');
-    textareas.forEach((textarea: HTMLTextAreaElement) => {
+    const textareas = this.elRef.nativeElement.querySelectorAll('.goal-input') as NodeListOf<HTMLTextAreaElement>;
+    textareas.forEach(textarea => {
       const autoResize = () => {
-        textarea.style.height = 'auto'; // reset
-        textarea.style.height = `${textarea.scrollHeight}px`; // grow
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
       };
-
-      // resize now + on input
       autoResize();
       textarea.addEventListener('input', autoResize);
     });
   }
-
-
 }

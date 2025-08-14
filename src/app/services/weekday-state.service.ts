@@ -114,6 +114,11 @@ export class WeekdayStateService {
   }
 
   private load() {
+    // Archives if we've moved to a later week
+    this.http.post(`${API}/archive-week`, {})
+      .pipe(catchError(() => of(null)))
+      .subscribe();
+
     this.http.get<Partial<WeekState>>(`${API}/state`).pipe(
       map(raw => this.shape(raw)),
       map(s => this.alignDatesToCurrentWeek(s)),          // <-- align dates on boot

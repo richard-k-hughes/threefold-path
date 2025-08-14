@@ -2,7 +2,7 @@
   "days": [
     {
       "name": "Monday",
-      "date": "Aug 4",
+      "date": "Aug 11",
       "dailyGoals": [
         {
           "name": "Physical",
@@ -33,7 +33,7 @@
     },
     {
       "name": "Tuesday",
-      "date": "Aug 5",
+      "date": "Aug 12",
       "dailyGoals": [
         {
           "name": "Physical",
@@ -64,7 +64,7 @@
     },
     {
       "name": "Wednesday",
-      "date": "Aug 6",
+      "date": "Aug 13",
       "dailyGoals": [
         {
           "name": "Physical",
@@ -79,7 +79,7 @@
         {
           "name": "Music/Art",
           "done": false,
-          "description": "daaaaaaaaaaaazaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          "description": "daaaaaaaasdaaaaazaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
       ],
       "subgoals": [
@@ -95,12 +95,12 @@
     },
     {
       "name": "Thursday",
-      "date": "Aug 7",
+      "date": "Aug 14",
       "dailyGoals": [
         {
           "name": "Physical",
           "done": true,
-          "description": "bbbbbsbsasddsdsdsdsssdbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbxbbbbbbbbbbbbbbdssd"
+          "description": "bbbbbsbasasddsdsdsdsssdbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbxbbbbbbbbbbbbbbdssd"
         },
         {
           "name": "Learning/Building",
@@ -120,13 +120,13 @@
         },
         {
           "name": "Diet Adherence",
-          "done": false
+          "done": true
         }
       ]
     },
     {
       "name": "Friday",
-      "date": "Aug 8",
+      "date": "Aug 15",
       "dailyGoals": [
         {
           "name": "Physical",
@@ -182,7 +182,7 @@
       },
       {
         "name": "Water Plants",
-        "done": true
+        "done": false
       },
       {
         "name": "Laundry",

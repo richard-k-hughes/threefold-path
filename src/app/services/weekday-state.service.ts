@@ -36,7 +36,7 @@ export class WeekdayStateService {
     const labels = ['Physical','Learning/Building','Music/Art'];
     const subLabels = ['Meditation','Diet Adherence'];
     const days = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
-    const dates = ['Aug 4','Aug 5','Aug 6','Aug 7','Aug 8'];
+    const dates = this.currentWeekDates();
 
     return {
       days: days.map((d,i) => ({
@@ -54,6 +54,20 @@ export class WeekdayStateService {
         ]
       }
     };
+  }
+
+  private currentWeekDates(): string[] {
+    const today = new Date();
+    const dow = today.getDay();                 // 0=Sun..6=Sat
+    const mondayOffset = dow === 0 ? -6 : 1 - dow;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + mondayOffset);
+    const fmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
+    return Array.from({ length: 5 }, (_, i) => {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      return fmt.format(d);                      // e.g. "Aug 11"
+    });
   }
 
   private shape(raw?: Partial<WeekState>): WeekState {
@@ -74,26 +88,35 @@ export class WeekdayStateService {
   }
 
 
+  private alignDatesToCurrentWeek(state: WeekState): WeekState {
+    const want = this.currentWeekDates();
+    const days = (state.days ?? []).map((d, i) => ({ ...d, date: want[i] }));
+    return { ...state, days };
+  }
+
   private load() {
-    this.http.get<Partial<WeekState>>(`${API}/state`)
-      .pipe(
-        map(raw => this.shape(raw)),
-        tap(merged => {
-          this.subj.next(merged);
-          localStorage.setItem(LOCAL_KEY, JSON.stringify(merged));
-        }),
-        catchError(_ => {
-          const saved = localStorage.getItem(LOCAL_KEY);
-          if (saved) {
-            try { this.subj.next(JSON.parse(saved) as WeekState); }
-            catch { this.subj.next(this.defaultState()); }
-          } else {
-            this.subj.next(this.defaultState());
-          }
-          return of(null);
-        })
-      )
-      .subscribe();
+    this.http.get<Partial<WeekState>>(`${API}/state`).pipe(
+      map(raw => this.shape(raw)),
+      map(s => this.alignDatesToCurrentWeek(s)),          // <-- align dates on boot
+      tap(next => {
+        this.subj.next(next);
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(next));
+      }),
+      // Optional: write back once on boot so state.json reflects the aligned dates
+      switchMap(next => this.http.put<WeekState>(`${API}/state`, next).pipe(
+        catchError(() => of(next)), map(() => next)
+      )),
+      catchError(_ => {
+        const saved = localStorage.getItem(LOCAL_KEY);
+        if (saved) {
+          try { this.subj.next(JSON.parse(saved) as WeekState); }
+          catch { this.subj.next(this.defaultState()); }
+        } else {
+          this.subj.next(this.defaultState());
+        }
+        return of(null);
+      })
+    ).subscribe();
   }
 
   /**

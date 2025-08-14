@@ -112,8 +112,17 @@ export class WeekdayStateService {
     this.http.get<Partial<WeekState>>(`${API}/state`).pipe(
       map(raw => this.shape(raw)),
       map(current => {
-        const next: WeekState = JSON.parse(JSON.stringify(current)); // deep clone
+        // deep clone to avoid mutating observables
+        const next: WeekState = JSON.parse(JSON.stringify(current));
+
+        // apply caller's change to days
         updater(next.days);
+
+        // >>> preserve the most recent WEEKLY from our in-memory state to avoid races
+        const live = this.subj.value;
+        if (live?.weekly) {
+          next.weekly = JSON.parse(JSON.stringify(live.weekly));
+        }
         return next;
       }),
       switchMap(next =>
@@ -133,7 +142,16 @@ export class WeekdayStateService {
       map(raw => this.shape(raw)),
       map(current => {
         const next: WeekState = JSON.parse(JSON.stringify(current));
+
+        if (!next.weekly) next.weekly = { goals: [], subgoals: [] };
+        // apply caller's change to weekly
         updater(next.weekly);
+
+        // >>> preserve the most recent DAYS from our in-memory state to avoid races
+        const live = this.subj.value;
+        if (live?.days?.length) {
+          next.days = JSON.parse(JSON.stringify(live.days));
+        }
         return next;
       }),
       switchMap(next =>
@@ -146,4 +164,5 @@ export class WeekdayStateService {
       catchError(_ => of(null))
     ).subscribe();
   }
+
 }

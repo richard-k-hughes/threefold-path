@@ -37,7 +37,7 @@
       "dailyGoals": [
         {
           "name": "Physical",
-          "done": false,
+          "done": true,
           "description": ""
         },
         {
@@ -100,7 +100,7 @@
         {
           "name": "Physical",
           "done": true,
-          "description": "bbbbbsbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbxbbbbbbbbbbbbbb"
+          "description": "bbbbbsbsasddsdsdsdsssdbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbxbbbbbbbbbbbbbbdssd"
         },
         {
           "name": "Learning/Building",
@@ -130,18 +130,18 @@
       "dailyGoals": [
         {
           "name": "Physical",
-          "done": false,
+          "done": true,
           "description": ""
         },
         {
           "name": "Learning/Building",
-          "done": false,
+          "done": true,
           "description": "line"
         },
         {
           "name": "Music/Art",
           "done": false,
-          "description": ""
+          "description": "gfd"
         }
       ],
       "subgoals": [
@@ -157,19 +157,36 @@
     }
   ],
   "weekly": {
-    "goals": [],
+    "goals": [
+      {
+        "name": "asd",
+        "done": true
+      },
+      {
+        "name": "here",
+        "done": true
+      },
+      {
+        "name": "again more",
+        "done": false
+      },
+      {
+        "name": "asd",
+        "done": true
+      }
+    ],
     "subgoals": [
       {
         "name": "Financial Assessment",
-        "done": false
+        "done": true
       },
       {
         "name": "Water Plants",
-        "done": false
+        "done": true
       },
       {
         "name": "Laundry",
-        "done": false
+        "done": true
       }
     ]
   }

@@ -72,6 +72,12 @@ export class WeeklyGoals implements AfterViewInit, OnInit, OnDestroy {
           return; // will emit again with initialized data
         }
 
+        // Use the canonical Monday from state if it exists
+        if (s.weekOf) {
+          const dt = new Date(s.weekOf + 'T00:00:00'); // ISO -> local Date
+          if (!Number.isNaN(dt.getTime())) this.mondayDate = dt;
+        }
+
         // map service → component UI
         this.primaryGoalCategories = (s.weekly.goals ?? []).map(g => g.name);
         this.subgoalCategories     = (s.weekly.subgoals ?? []).map(sg => sg.name);

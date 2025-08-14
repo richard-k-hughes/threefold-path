@@ -13,6 +13,7 @@ export interface DayState {
 export interface WeeklyGoal { name: string; done: boolean; }
 export interface WeeklySubgoal { name: string; done: boolean; }
 export interface WeekState {
+  weekOf: string;
   days: DayState[];
   weekly: { goals: WeeklyGoal[]; subgoals: WeeklySubgoal[]; };
 }
@@ -22,7 +23,7 @@ const API = 'http://localhost:3000';
 
 @Injectable({ providedIn: 'root' })
 export class WeekdayStateService {
-  private subj = new BehaviorSubject<WeekState>({ days: [], weekly: { goals: [], subgoals: [] } });
+  private subj = new BehaviorSubject<WeekState>({weekOf: '', days: [], weekly: { goals: [], subgoals: [] } });
   public state$: Observable<WeekState> = this.subj.asObservable();
 
   constructor(private http: HttpClient) {
@@ -37,8 +38,10 @@ export class WeekdayStateService {
     const subLabels = ['Meditation','Diet Adherence'];
     const days = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
     const dates = this.currentWeekDates();
+    const mon = this.mondayOf(new Date());
 
     return {
+      weekOf: this.iso(mon),
       days: days.map((d,i) => ({
         name: d,
         date: dates[i],
@@ -66,9 +69,23 @@ export class WeekdayStateService {
     return Array.from({ length: 5 }, (_, i) => {
       const d = new Date(monday);
       d.setDate(monday.getDate() + i);
-      return fmt.format(d);                      // e.g. "Aug 11"
+      return fmt.format(d);
     });
   }
+
+ private mondayOf(date: Date): Date {
+       const d = new Date(date);
+       const dow = d.getDay();
+       const offset = dow === 0 ? -6 : 1 - dow;
+       d.setDate(d.getDate() + offset);
+       d.setHours(0, 0, 0, 0);
+       return d;
+     }
+
+ private iso(d: Date): string {
+       return d.toISOString().slice(0, 10);
+     }
+
 
   private shape(raw?: Partial<WeekState>): WeekState {
     const base = this.defaultState();
@@ -79,7 +96,8 @@ export class WeekdayStateService {
     return {
       ...base,
       ...raw,
-      days, // <-- use the computed days
+      weekOf: raw?.weekOf ?? base.weekOf,
+      days,
       weekly: {
         ...base.weekly,
         ...(raw?.weekly ?? {})
@@ -91,7 +109,8 @@ export class WeekdayStateService {
   private alignDatesToCurrentWeek(state: WeekState): WeekState {
     const want = this.currentWeekDates();
     const days = (state.days ?? []).map((d, i) => ({ ...d, date: want[i] }));
-    return { ...state, days };
+    const weekOf = this.iso(this.mondayOf(new Date()));
+    return { ...state, weekOf, days };
   }
 
   private load() {
@@ -146,6 +165,7 @@ export class WeekdayStateService {
         if (live?.weekly) {
           next.weekly = JSON.parse(JSON.stringify(live.weekly));
         }
+        next.weekOf = this.iso(this.mondayOf(new Date()));
         return next;
       }),
       switchMap(next =>
@@ -175,6 +195,7 @@ export class WeekdayStateService {
         if (live?.days?.length) {
           next.days = JSON.parse(JSON.stringify(live.days));
         }
+        next.weekOf = this.iso(this.mondayOf(new Date()));
         return next;
       }),
       switchMap(next =>

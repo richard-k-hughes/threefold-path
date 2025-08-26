@@ -1,9 +1,9 @@
 {
-  "weekOf": "2025-08-25",
+  "weekOf": "2025-08-11",
   "days": [
     {
       "name": "Monday",
-      "date": "Aug 25",
+      "date": "Aug 11",
       "dailyGoals": [
         {
           "name": "Physical",
@@ -34,7 +34,7 @@
     },
     {
       "name": "Tuesday",
-      "date": "Aug 26",
+      "date": "Aug 12",
       "dailyGoals": [
         {
           "name": "Physical",
@@ -65,7 +65,7 @@
     },
     {
       "name": "Wednesday",
-      "date": "Aug 27",
+      "date": "Aug 13",
       "dailyGoals": [
         {
           "name": "Physical",
@@ -96,7 +96,7 @@
     },
     {
       "name": "Thursday",
-      "date": "Aug 28",
+      "date": "Aug 14",
       "dailyGoals": [
         {
           "name": "Physical",
@@ -127,7 +127,7 @@
     },
     {
       "name": "Friday",
-      "date": "Aug 29",
+      "date": "Aug 15",
       "dailyGoals": [
         {
           "name": "Physical",

@@ -1,5 +1,5 @@
 {
-  "weekOf": "2025-08-25",
+  "weekOf": "2025-08-18",
   "days": [
     {
       "name": "Monday",
@@ -12,7 +12,7 @@
         },
         {
           "name": "Learning/Building",
-          "done": false,
+          "done": true,
           "description": ""
         },
         {
@@ -28,7 +28,7 @@
         },
         {
           "name": "Diet Adherence",
-          "done": false
+          "done": true
         }
       ]
     },
@@ -38,7 +38,7 @@
       "dailyGoals": [
         {
           "name": "Physical",
-          "done": false,
+          "done": true,
           "description": ""
         },
         {
@@ -48,8 +48,8 @@
         },
         {
           "name": "Music/Art",
-          "done": false,
-          "description": ""
+          "done": true,
+          "description": "asdasd"
         }
       ],
       "subgoals": [
@@ -59,7 +59,7 @@
         },
         {
           "name": "Diet Adherence",
-          "done": false
+          "done": true
         }
       ]
     },
@@ -80,7 +80,7 @@
         {
           "name": "Music/Art",
           "done": false,
-          "description": ""
+          "description": "daaaaaaaasdaaaaazaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
       ],
       "subgoals": [
@@ -100,8 +100,8 @@
       "dailyGoals": [
         {
           "name": "Physical",
-          "done": false,
-          "description": ""
+          "done": true,
+          "description": "bbbbbskbasasddsdsdsdsssdbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbxbbbbbbbbbbbbbbdssd"
         },
         {
           "name": "Learning/Building",
@@ -110,8 +110,8 @@
         },
         {
           "name": "Music/Art",
-          "done": false,
-          "description": ""
+          "done": true,
+          "description": "adddinggggggggdgggggggggggggggggggggggggggg"
         }
       ],
       "subgoals": [
@@ -121,7 +121,7 @@
         },
         {
           "name": "Diet Adherence",
-          "done": false
+          "done": true
         }
       ]
     },
@@ -131,38 +131,59 @@
       "dailyGoals": [
         {
           "name": "Physical",
-          "done": false,
+          "done": true,
           "description": ""
         },
         {
           "name": "Learning/Building",
-          "done": false,
-          "description": ""
+          "done": true,
+          "description": "line"
         },
         {
           "name": "Music/Art",
           "done": false,
-          "description": ""
+          "description": "gfd"
         }
       ],
       "subgoals": [
         {
           "name": "Meditation",
-          "done": false
+          "done": true
         },
         {
           "name": "Diet Adherence",
-          "done": false
+          "done": true
         }
       ]
     }
   ],
   "weekly": {
-    "goals": [],
+    "goals": [
+      {
+        "name": "asd",
+        "done": true
+      },
+      {
+        "name": "here",
+        "done": false
+      },
+      {
+        "name": "again more",
+        "done": false
+      },
+      {
+        "name": "asd",
+        "done": true
+      },
+      {
+        "name": "hello",
+        "done": false
+      }
+    ],
     "subgoals": [
       {
         "name": "Financial Assessment",
-        "done": false
+        "done": true
       },
       {
         "name": "Water Plants",

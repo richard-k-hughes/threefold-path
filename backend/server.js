@@ -113,11 +113,40 @@ function ensureHistoryDir() {
   try { fs.mkdirSync(HISTORY_DIR, { recursive: true }); } catch {}
 }
 
+function cleanState(state) {
+  // Clean weekday states
+  state.days.forEach(day => {
+    // Clean dailyGoals
+    day.dailyGoals.forEach(goal => {
+      goal.done = false;
+      goal.description = '';
+    });
+    // Clean day subgoals
+    day.subgoals.forEach(subgoal => {
+      subgoal.done = false;
+    });
+  });
+
+  // Clean weekly goals
+  state.weekly = {
+    goals: [],  // Remove all weekly primary goals
+    subgoals: state.weekly.subgoals.map(goal => ({
+      ...goal,
+      done: false  // Uncheck all subgoals but keep their names
+    }))
+  };
+
+  // Update the weekOf to current Monday
+  state.weekOf = iso(mondayOf(new Date()));
+
+  return state;
+}
+
 /**
  * POST /archive-week
  * If state.weekOf < current Monday (ISO), writes a snapshot to:
  *   history/week-of-<state.weekOf>.json
- * Safe to call multiple times; won’t overwrite existing snapshots.
+ * Safe to call multiple times; won't overwrite existing snapshots.
  */
 app.post('/archive-week', (req, res) => {
   try {
@@ -144,7 +173,17 @@ app.post('/archive-week', (req, res) => {
     fs.writeFileSync(tmp, JSON.stringify(state, null, 2), 'utf-8');
     fs.renameSync(tmp, snapshotPath);
 
-    return res.json({ archived: true, from: priorWeekOf, to: currentMondayIso, path: snapshotPath });
+    // Clean and save the new state
+    const cleanedState = cleanState(state);
+    writeState(cleanedState);
+
+    return res.json({
+      archived: true,
+      from: priorWeekOf,
+      to: currentMondayIso,
+      path: snapshotPath,
+      stateReset: true
+    });
   } catch (e) {
     console.error('archive-week failed:', e);
     return res.status(500).json({ error: 'archive_failed' });

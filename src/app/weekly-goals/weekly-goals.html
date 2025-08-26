@@ -11,7 +11,7 @@
           <label class="goal-label">
             <input
               type="checkbox"
-              [checked]="goals[category]?.checked"
+              [checked]="goals[category].checked"
               (change)="toggleWeeklyGoal(i)"
             />
             <span class="goal-title">{{ category }}</span>
@@ -85,7 +85,7 @@
           <label class="subgoal-label">
             <input
               type="checkbox"
-              [checked]="goals[sub]?.checked"
+              [checked]="goals[sub].checked"
               (change)="toggleWeeklySubgoal(j)"
             />
             <span class="subgoal-title">{{ sub }}</span>

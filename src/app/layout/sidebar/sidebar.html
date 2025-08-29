@@ -28,3 +28,16 @@
     </div>
   </div>
 </div>
+
+<div class="tab-content" *ngIf="activeTab === 'log'" (click)="$event.stopPropagation()">
+  <div class="log-container">
+    <h3>History Logs</h3>
+    <div class="log-list">
+      <ul>
+        <li *ngFor="let file of historyFiles">
+          {{ file.replace('.json', '') }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BacklogService } from '../../services/backlog.service';
+import { HistoryService } from '../../services/history.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,14 +13,24 @@ export class Sidebar implements OnInit, OnDestroy {
   activeTab: string = '';
   newBacklogTask: string = '';
   backlogTasks: string[] = [];
+  historyFiles: string[] = [];
   private subscription: Subscription = new Subscription();
 
-  constructor(private backlogService: BacklogService) {}
+  constructor(
+    private backlogService: BacklogService,
+    private historyService: HistoryService
+  ) {}
 
   ngOnInit(): void {
     this.subscription.add(
       this.backlogService.backlogTasks$.subscribe(tasks => {
         this.backlogTasks = tasks;
+      })
+    );
+
+    this.subscription.add(
+      this.historyService.getHistoryFiles().subscribe(files => {
+        this.historyFiles = files;
       })
     );
   }

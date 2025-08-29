@@ -191,6 +191,18 @@ app.post('/archive-week', (req, res) => {
 });
 // ===== end archiving =====
 
+app.get('/api/history-files', (req, res) => {
+  try {
+    const files = fs.readdirSync(HISTORY_DIR)
+      .filter(file => file.endsWith('.json'))
+      .sort((a, b) => b.localeCompare(a)); // Sort in reverse chronological order
+    res.json(files);
+  } catch (e) {
+    console.error('Failed to read history directory:', e);
+    res.status(500).json({ error: 'Failed to read history files' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Backlog API listening on port ${PORT}`);

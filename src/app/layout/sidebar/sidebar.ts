@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { BacklogService } from '../../services/backlog.service';
 import { HistoryService } from '../../services/history.service';
 import { Subscription } from 'rxjs';
@@ -57,5 +57,10 @@ export class Sidebar implements OnInit, OnDestroy {
 
   removeBacklogTask(task: string): void {
     this.backlogService.removeBacklogTask(task);
+  }
+
+  @HostListener('document:keydown.escape')
+  handleEscapeKey(): void {
+    this.activeTab = '';
   }
 }

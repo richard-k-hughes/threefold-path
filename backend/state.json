@@ -161,6 +161,10 @@
     "goals": [
       {
         "name": "just checking lol",
+        "done": true
+      },
+      {
+        "name": "asd",
         "done": false
       }
     ],

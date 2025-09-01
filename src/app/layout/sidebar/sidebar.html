@@ -34,10 +34,17 @@
     <h3>History Logs</h3>
     <div class="log-list">
       <ul>
-        <li *ngFor="let file of historyFiles">
+        <li *ngFor="let file of historyFiles" (click)="openHistoryModal(file)">
           {{ file.replace('.json', '') }}
         </li>
       </ul>
     </div>
   </div>
 </div>
+
+<!-- History Viewer Modal -->
+<app-history-viewer
+  *ngIf="showHistoryModal"
+  [filename]="selectedHistoryFile"
+  (close)="closeHistoryModal()"
+></app-history-viewer>

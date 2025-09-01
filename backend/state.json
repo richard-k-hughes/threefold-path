@@ -55,7 +55,7 @@
       "subgoals": [
         {
           "name": "Meditation",
-          "done": false
+          "done": true
         },
         {
           "name": "Diet Adherence",
@@ -74,8 +74,8 @@
         },
         {
           "name": "Learning/Building",
-          "done": false,
-          "description": ""
+          "done": true,
+          "description": "stttufffffs"
         },
         {
           "name": "Music/Art",
@@ -141,8 +141,8 @@
         },
         {
           "name": "Music/Art",
-          "done": false,
-          "description": ""
+          "done": true,
+          "description": "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
         }
       ],
       "subgoals": [
@@ -152,7 +152,7 @@
         },
         {
           "name": "Diet Adherence",
-          "done": false
+          "done": true
         }
       ]
     }
@@ -166,7 +166,7 @@
       },
       {
         "name": "Water Plants",
-        "done": false
+        "done": true
       },
       {
         "name": "Laundry",

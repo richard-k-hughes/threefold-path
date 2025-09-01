@@ -16,6 +16,10 @@ export class Sidebar implements OnInit, OnDestroy {
   historyFiles: string[] = [];
   private subscription: Subscription = new Subscription();
 
+  // Add properties for history viewer modal
+  showHistoryModal: boolean = false;
+  selectedHistoryFile: string = '';
+
   constructor(
     private backlogService: BacklogService,
     private historyService: HistoryService
@@ -62,5 +66,17 @@ export class Sidebar implements OnInit, OnDestroy {
   @HostListener('document:keydown.escape')
   handleEscapeKey(): void {
     this.activeTab = '';
+  }
+
+  // Add method to open history modal
+  openHistoryModal(filename: string): void {
+    this.selectedHistoryFile = filename;
+    this.showHistoryModal = true;
+  }
+
+  // Add method to close history modal
+  closeHistoryModal(): void {
+    this.showHistoryModal = false;
+    this.selectedHistoryFile = '';
   }
 }

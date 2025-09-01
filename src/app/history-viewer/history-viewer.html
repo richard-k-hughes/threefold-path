@@ -1,0 +1,133 @@
+<div class="history-modal-overlay">
+  <div class="history-modal-content">
+    <div class="modal-header">
+      <h3>Historical Week: {{ filename.replace('.json', '') }}</h3>
+      <button class="close-button" (click)="closeModal()">×</button>
+    </div>
+
+    <div class="modal-body" *ngIf="!isLoading && !error">
+      <!-- Weekly Goals Section -->
+      <div class="weekly-wrapper read-only">
+        <div class="primary-goals-container">
+          <div class="section-label">
+            Weekly Primary Goals
+            <span class="date-label" *ngIf="mondayDate">Week of {{ mondayDate | date:'MMMM d, yyyy' }}</span>
+          </div>
+
+          <div class="goals-content">
+            @for (category of primaryGoalCategories; track category) {
+              <div class="goal-section">
+                <label class="goal-label">
+                  <input
+                    type="checkbox"
+                    [checked]="goals[category] && goals[category].checked"
+                    disabled
+                  />
+                  <span class="goal-title">{{ category }}</span>
+                </label>
+              </div>
+            }
+            @if (primaryGoalCategories.length === 0) {
+              <div class="no-goals-message">No primary goals for this week.</div>
+            }
+          </div>
+        </div>
+
+        <div class="subgoals-container">
+          <div class="section-label">Weekly Subgoals</div>
+          <div class="subgoal-content">
+            @for (sub of subgoalCategories; track sub) {
+              <div class="subgoal-item">
+                <label class="subgoal-label">
+                  <input
+                    type="checkbox"
+                    [checked]="goals[sub] && goals[sub].checked"
+                    disabled
+                  />
+                  <span class="subgoal-title">{{ sub }}</span>
+                </label>
+              </div>
+            }
+            @if (subgoalCategories.length === 0) {
+              <div class="no-goals-message">No subgoals for this week.</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekday Goals Section -->
+      <div class="weekday-section">
+        <div class="section-label">Daily Goals</div>
+
+        <!-- Weekday navigation tabs -->
+        <div class="weekday-tabs">
+          @for (day of weekdays; track day) {
+            <div
+              class="weekday-tab"
+              [class.active]="selectedDay === day"
+              (click)="selectDay(day)"
+            >
+              {{ day.name }} <span class="date-label">{{ day.date }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Selected day content -->
+        <div class="day-content" *ngIf="selectedDay">
+          <div class="day-goals">
+            <div class="section-label">Daily Goals</div>
+            @for (goal of selectedDay.dailyGoals; track goal) {
+              <div class="goal-section">
+                <label class="goal-label">
+                  <input
+                    type="checkbox"
+                    [checked]="goal.done"
+                    disabled
+                  />
+                  <span class="goal-title">{{ goal.name }}</span>
+                </label>
+                <div class="goal-description" *ngIf="goal.description">
+                  {{ goal.description }}
+                </div>
+                <div class="no-description" *ngIf="!goal.description">
+                  (No description)
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="day-subgoals">
+            <div class="section-label">Daily Subgoals</div>
+            <div class="subgoal-content">
+              @for (subgoal of selectedDay.subgoals; track subgoal) {
+                <div class="subgoal-item">
+                  <label class="subgoal-label">
+                    <input
+                      type="checkbox"
+                      [checked]="subgoal.done"
+                      disabled
+                    />
+                    <span class="subgoal-title">{{ subgoal.name }}</span>
+                  </label>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading">
+      <p>Loading history data...</p>
+    </div>
+
+    <div class="error-state" *ngIf="error">
+      <p class="error-message">{{ error }}</p>
+      <button class="retry-button" (click)="loadHistoryData()">Try Again</button>
+    </div>
+
+    <div class="modal-footer">
+      <button class="close-button-large" (click)="closeModal()">Close</button>
+    </div>
+  </div>
+</div>

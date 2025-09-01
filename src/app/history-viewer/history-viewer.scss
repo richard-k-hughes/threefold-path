@@ -1,0 +1,228 @@
+.history-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.history-modal-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #777;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+.modal-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.modal-footer {
+  padding: 16px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-button-large {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-button-large:hover {
+  background-color: #e0e0e0;
+}
+
+.loading-state, .error-state {
+  padding: 32px;
+  text-align: center;
+}
+
+.error-message {
+  color: #d32f2f;
+  margin-bottom: 16px;
+}
+
+.retry-button {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.weekly-wrapper.read-only {
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.weekly-wrapper.read-only input[type="checkbox"] {
+  cursor: default;
+}
+
+.no-goals-message {
+  padding: 16px;
+  color: #777;
+  font-style: italic;
+}
+
+/* Weekday section styles */
+.weekday-section {
+  margin-top: 24px;
+  border-top: 1px solid #eee;
+  padding-top: 16px;
+}
+
+.weekday-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 16px;
+}
+
+.weekday-tab {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  margin-right: 4px;
+  margin-bottom: -1px;
+  font-size: 0.9rem;
+}
+
+.weekday-tab.active {
+  background-color: white;
+  border-bottom-color: white;
+  font-weight: bold;
+}
+
+.weekday-tab:hover {
+  background-color: #e9e9e9;
+}
+
+.weekday-tab.active:hover {
+  background-color: white;
+}
+
+.date-label {
+  color: #777;
+  font-size: 0.8rem;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.day-content {
+  background-color: #fcfcfc;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.goal-section {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.goal-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  cursor: default;
+}
+
+.goal-title {
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+.goal-description {
+  margin-left: 24px;
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+.no-description {
+  margin-left: 24px;
+  color: #999;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.day-goals, .day-subgoals {
+  margin-bottom: 20px;
+}
+
+.section-label {
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #444;
+  font-size: 1.1rem;
+}
+
+.subgoal-content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.subgoal-item {
+  margin-right: 16px;
+  margin-bottom: 8px;
+}
+
+.subgoal-label {
+  display: flex;
+  align-items: center;
+  cursor: default;
+}
+
+.subgoal-title {
+  margin-left: 8px;
+  font-size: 0.9rem;
+}

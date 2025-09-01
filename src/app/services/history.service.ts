@@ -22,4 +22,8 @@ export class HistoryService {
   getHistoryFiles(): Observable<string[]> {
     return this.historyFiles$.asObservable();
   }
+
+  getHistoryFile(filename: string): Observable<any> {
+    return this.http.get<any>(`http://localhost:3000/api/history/${filename}`);
+  }
 }

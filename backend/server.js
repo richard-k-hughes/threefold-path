@@ -203,6 +203,26 @@ app.get('/api/history-files', (req, res) => {
   }
 });
 
+app.get('/api/history/:filename', (req, res) => {
+  try {
+    const filename = req.params.filename;
+    if (!filename || !filename.endsWith('.json')) {
+      return res.status(400).json({ error: 'Invalid filename' });
+    }
+
+    const filePath = path.join(HISTORY_DIR, filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    const content = fs.readFileSync(filePath, 'utf-8');
+    res.json(JSON.parse(content));
+  } catch (e) {
+    console.error('Failed to read history file:', e);
+    res.status(500).json({ error: 'Failed to read history file' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Backlog API listening on port ${PORT}`);

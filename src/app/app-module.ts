@@ -8,6 +8,7 @@ import { MainContainer } from './main-container/main-container';
 import { Sidebar } from './layout/sidebar/sidebar';
 import { WeekdayGoals } from './weekday-goals/weekday-goals';
 import { WeeklyGoals } from './weekly-goals/weekly-goals';
+import { HistoryViewer } from './history-viewer/history-viewer';
 import { FormsModule } from "@angular/forms";
 
 @NgModule({
@@ -16,7 +17,8 @@ import { FormsModule } from "@angular/forms";
     MainContainer,
     Sidebar,
     WeekdayGoals,
-    WeeklyGoals
+    WeeklyGoals,
+    HistoryViewer
   ],
     imports: [
         BrowserModule,
